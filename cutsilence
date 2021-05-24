@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# This script is designed for chopping samples from sample CDs that have many samples per-track, separated by sections of silence.
+# It then organizes them into a folder of your naming.
+# SoX and dmenu are requirements.
+
+# dmenu definitions
+file=$(ls | dmenu -i -p "File:")
+[[ "$file" = "" ]] && exit 1
+outdir=$(ls | dmenu -p "Output folder:")
+[[ "$outdir" = "" ]] && exit 1
+format=$(echo -e "wav\nmp3" | dmenu -p "Output format:")
+[[ "$format" = "" ]] && exit 1
+
+# Checks if the folder exists, creates if not.
+if [ ! -d "$outdir" ]; then
+	mkdir $outdir
+fi
+
+# Working notification
+notify-send "🔪 Chopping Samples"
+
+# Chopping and output notifications
+if sox --norm=-3 "$file" $outdir/chp-.$format silence 1 0.01 1% 1 0.1 1% : newfile : restart ;
+	then notify-send "✅ Samples chopped"
+else
+	notify-send "❌ Chopping failed"
+fi
