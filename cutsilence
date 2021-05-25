@@ -13,9 +13,7 @@ format=$(echo -e "wav\nmp3" | dmenu -p "Output format:")
 [[ "$format" = "" ]] && exit 1
 
 # Checks if the folder exists, creates if not.
-if [ ! -d "$outdir" ]; then
-	mkdir $outdir
-fi
+[[ ! -d "$outdir" ]] && mkdir $outdir
 
 # Working notification
 notify-send "🔪 Chopping Samples"
